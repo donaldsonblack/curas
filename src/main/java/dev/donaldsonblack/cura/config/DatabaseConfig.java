@@ -40,6 +40,17 @@ public class DatabaseConfig {
 		dataSource.setDriverClassName("org.postgresql.Driver");
 		dataSource.setUsername(this.username);
 		dataSource.setPassword(this.password);
+
+		dataSource.setInitializationFailTimeout(-1);
+		dataSource.setConnectionTimeout(60_000);
+		dataSource.setValidationTimeout(5_000);
+
+		dataSource.setMinimumIdle(0);
+		dataSource.setMaximumPoolSize(5);
+		dataSource.setIdleTimeout(60_000);
+		dataSource.setKeepaliveTime(0);
+		dataSource.setMaxLifetime(300_000);
+
 		return dataSource;
 	}
 
