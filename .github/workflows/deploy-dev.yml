@@ -23,7 +23,7 @@ jobs:
 
       - name: Discover ECR Registry
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@2
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: Get ECR token
         id: ecr
