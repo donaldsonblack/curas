@@ -1,0 +1,55 @@
+name: Deploy to Dev
+
+on:
+  workflow_run:
+    workflows: [Build]
+    types: [completed]
+
+env:
+  SERVICE_NAME: curas-server
+  COMPOSE_DIR: /srv/apps/dev
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Discover ECR Registry
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@2
+
+      - name: Get ECR token
+        id: ecr
+        run: |
+          TOKEN=$(aws ecr get-login-password --region "$AWS_REGION")
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Redeploy on LXC
+        uses: appleboy/ssh-action@v1.2.2
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          COMPOSE_DIR: ${{ env.COMPOSE_DIR }}
+          SERVICE_NAME: ${{ env.SERVICE_NAME }}
+          ECR_TOKEN: ${{ steps.ecr.outputs.token }}
+        with:
+          host: ${{ secrets.DEV_HOST }}
+          username: ${{ secrets.DEV_USER }}
+          key: ${{ secrets.DEV_SSH_KEY }}
+          port: 2022
+          envs: REGISTRY,COMPOSE_DIR,SERVICE_NAME,ECR_TOKEN
+          script_stop: true
+          command_timeout: 10m
+          script: |
+            set -euo pipefail
+            cd "$COMPOSE_DIR"
+            echo "$ECR_TOKEN" | docker login --username AWS --password-stdin "$REGISTRY"
+            docker compose pull "$SERVICE_NAME"
+            docker compose up -d "$SERVICE_NAME"
+            docker image prune -f
