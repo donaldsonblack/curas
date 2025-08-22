@@ -45,7 +45,7 @@ jobs:
           key: ${{ secrets.DEV_SSH_KEY }}
           port: 2022
           envs: REGISTRY,COMPOSE_DIR,SERVICE_NAME,ECR_TOKEN
-          script_stop: true
+          # script_stop: true
           command_timeout: 10m
           script: |
             set -euo pipefail
