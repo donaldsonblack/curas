@@ -12,11 +12,29 @@ public class Checklist {
 	private Integer departmentId;
 	private Integer equipmentId;
 	private String type;
+	private String name;
 
+	private String description;
 	private String author;
 	private Instant created;
 
 	private JsonNode questions;
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	public Integer getId() {
 		return this.id;
