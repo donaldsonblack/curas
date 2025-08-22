@@ -6,6 +6,8 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write    # needed to commit the bumped version
 
 jobs:
   build:
@@ -14,6 +16,45 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Bump version in gradle.properties
+        id: bump
+        shell: bash
+        run: |
+          FILE="gradle.properties"
+
+          if ! grep -qE '^version=' "$FILE"; then
+            echo "version key not found in $FILE"; exit 1
+          fi
+
+          OLD_VERSION="$(grep -E '^version=' "$FILE" | sed 's/^version=//')"
+          # strip possible -SNAPSHOT
+          CORE_VERSION="${OLD_VERSION%-SNAPSHOT}"
+
+          IFS='.' read -r MAJ MIN PAT <<< "$CORE_VERSION"
+          if [[ -z "$MAJ" || -z "$MIN" || -z "$PAT" || ! "$MAJ$MIN$PAT" =~ ^[0-9]+$ ]]; then
+            echo "Version must be MAJOR.MINOR.PATCH (got: $OLD_VERSION)"; exit 1
+          fi
+
+          NEW_VERSION="$MAJ.$MIN.$((PAT + 1))"
+
+          # write back
+          sed -i.bak -E "s/^version=.*/version=${NEW_VERSION}/" "$FILE"
+          rm -f "$FILE.bak"
+
+          echo "old=${OLD_VERSION}" >> "$GITHUB_OUTPUT"
+          echo "new=${NEW_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Commit bumped version
+        if: ${{ github.ref == 'refs/heads/main' }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add gradle.properties
+            git commit -m "ci: bump version ${{ steps.bump.outputs.old }} -> ${{ steps.bump.outputs.new }}"
+            git push
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -44,5 +85,5 @@ jobs:
 
       - name: Push Docker image to ECR
         run: |
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:$VERSION
+          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ steps.bump.outputs.new }}"
           docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
