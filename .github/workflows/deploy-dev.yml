@@ -4,6 +4,7 @@ on:
   workflow_run:
     workflows: [Build]
     types: [completed]
+  workflow_dispatch:
 
 env:
   SERVICE_NAME: curas-server
