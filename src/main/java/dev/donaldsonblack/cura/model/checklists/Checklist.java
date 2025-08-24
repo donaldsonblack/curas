@@ -11,7 +11,6 @@ public class Checklist {
 
 	private String name;
 	private String description;
-
 	private String type;
 
 	private int id;
@@ -19,11 +18,26 @@ public class Checklist {
 	private int equipmentId;
 	private int authorId;
 
-	private String author;
 	private Instant created;
-
 	private JsonNode questions;
 
+	public Checklist() {
+	}
+
+	public Checklist(String name, String description, String type, int id, int departmentId,
+			int equipmentId, int authorId, Instant created, JsonNode questions) {
+		this.name = name;
+		this.description = description;
+		this.type = type;
+		this.id = id;
+		this.departmentId = departmentId;
+		this.equipmentId = equipmentId;
+		this.authorId = authorId;
+		this.created = created;
+		this.questions = questions;
+	}
+
+	// ---------- Getters & Setters ----------
 	public String getName() {
 		return this.name;
 	}
@@ -56,6 +70,14 @@ public class Checklist {
 		this.type = type;
 	}
 
+	public int getAuthorId() {
+		return this.authorId;
+	}
+
+	public void setAuthorId(int id) {
+		this.authorId = id;
+	}
+
 	public Integer getDepartmentId() {
 		return this.departmentId;
 	}
@@ -72,14 +94,6 @@ public class Checklist {
 		this.equipmentId = id;
 	}
 
-	public String getAuthor() {
-		return this.author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
 	public Instant getCreated() {
 		return this.created;
 	}
@@ -94,5 +108,72 @@ public class Checklist {
 
 	public void setQuestions(JsonNode questions) {
 		this.questions = questions;
+	}
+
+	public static class Builder {
+		private String name;
+		private String description;
+		private String type;
+		private int id;
+		private int departmentId;
+		private int equipmentId;
+		private int authorId;
+		private Instant created;
+		private JsonNode questions;
+
+		public Builder name(String name) {
+			this.name = name;
+			return this;
+		}
+
+		public Builder description(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public Builder type(String type) {
+			this.type = type;
+			return this;
+		}
+
+		public Builder id(int id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder departmentId(int departmentId) {
+			this.departmentId = departmentId;
+			return this;
+		}
+
+		public Builder equipmentId(int equipmentId) {
+			this.equipmentId = equipmentId;
+			return this;
+		}
+
+		public Builder authorId(int authorId) {
+			this.authorId = authorId;
+			return this;
+		}
+
+		public Builder created(Instant created) {
+			this.created = created;
+			return this;
+		}
+
+		public Builder questions(JsonNode questions) {
+			this.questions = questions;
+			return this;
+		}
+
+		public Checklist build() {
+			return new Checklist(name, description, type, id,
+					departmentId, equipmentId,
+					authorId, created, questions);
+		}
+	}
+
+	public static Builder builder() {
+		return new Builder();
 	}
 }
