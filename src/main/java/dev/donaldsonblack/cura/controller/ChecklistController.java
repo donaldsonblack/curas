@@ -2,19 +2,17 @@ package dev.donaldsonblack.cura.controller;
 
 import java.util.List;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import dev.donaldsonblack.cura.model.Checklist;
+import dev.donaldsonblack.cura.model.checklists.Checklist;
+import dev.donaldsonblack.cura.model.checklists.ChecklistCreateRequest;
+import dev.donaldsonblack.cura.model.checklists.ChecklistPatchRequest;
+import dev.donaldsonblack.cura.model.checklists.ChecklistDetail;
 import dev.donaldsonblack.cura.repository.ChecklistRepository;
 
 @RestController
@@ -24,16 +22,27 @@ public class ChecklistController {
 	@Autowired
 	private ChecklistRepository checklistRepository;
 
+	// ---------- NEW: enriched detail ----------
+	@GetMapping("/checklists/{id}/detail")
+	public ResponseEntity<ChecklistDetail> getDetail(@PathVariable Integer id) {
+		return checklistRepository.findDetailById(id)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
+
+	@GetMapping("/checklists/detail")
+	public ResponseEntity<List<ChecklistDetail>> listDetail(
+			@RequestParam(required = false) Integer departmentId,
+			@RequestParam(required = false) Integer equipmentId) {
+		var rows = checklistRepository.findDetails();
+		return ResponseEntity.ok(rows);
+	}
+
+	// ---------- existing endpoints (unchanged) ----------
 	@GetMapping("/checklists")
 	public ResponseEntity<List<Checklist>> getAll() {
 		List<Checklist> checklists = checklistRepository.findAll();
 		return ResponseEntity.ok(checklists);
-	}
-
-	@PostMapping("/checklists")
-	public ResponseEntity<Checklist> create(@RequestBody Checklist req) {
-		Checklist created = checklistRepository.insert(req);
-		return ResponseEntity.status(HttpStatus.CREATED).body(created);
 	}
 
 	@GetMapping("/checklists/{id}")
@@ -56,11 +65,36 @@ public class ChecklistController {
 		return ResponseEntity.ok(checklists);
 	}
 
-	@PutMapping("/checklists/{id}")
-	public ResponseEntity<?> updateChecklist(@PathVariable Integer id, @RequestBody Checklist checklist) {
-		checklist.setId(id);
-		boolean success = checklistRepository.update(checklist);
-		return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+	@PostMapping("/checklists")
+	public ResponseEntity<Checklist> create(@Valid @RequestBody ChecklistCreateRequest req) {
+		Checklist toInsert = req.toChecklistEntity();
+		Checklist created = checklistRepository.insert(toInsert);
+		return ResponseEntity.status(HttpStatus.CREATED).body(created);
+	}
+
+	// @PutMapping("/checklists/{id}")
+	// public ResponseEntity<?> updateChecklist(@PathVariable Integer id, @Valid
+	// @RequestBody ChecklistUpdateRequest req) {
+	// if (!id.equals(req.getId())) {
+	// return ResponseEntity.badRequest().body("Path id and body id must match");
+	// }
+	// var existing = checklistRepository.findById(id);
+	// if (existing.isEmpty())
+	// return ResponseEntity.notFound().build();
+	// boolean success = checklistRepository.update(req.toChecklistEntity());
+	// return success ? ResponseEntity.ok().build() :
+	// ResponseEntity.notFound().build();
+	// }
+
+	@PatchMapping("/checklists/{id}")
+	public ResponseEntity<?> patchChecklist(@PathVariable Integer id, @RequestBody ChecklistPatchRequest patch) {
+		var existingOpt = checklistRepository.findById(id);
+		if (existingOpt.isEmpty())
+			return ResponseEntity.notFound().build();
+		var existing = existingOpt.get();
+		patch.applyTo(existing);
+		boolean success = checklistRepository.update(existing);
+		return success ? ResponseEntity.ok(existing) : ResponseEntity.notFound().build();
 	}
 
 	@DeleteMapping("/checklists/{id}")
@@ -68,12 +102,4 @@ public class ChecklistController {
 		boolean success = checklistRepository.deleteById(id);
 		return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
 	}
-
-	// // Getes all the information the user will need to create a new checklist, e.g.
-	// // list of all equipment, departments etc.
-	// @GetMapping("/checklists/form-data")
-	// public ResponseEntity<?> getCreateChecklistInformation() {
-
-	// }
-
 }
