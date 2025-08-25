@@ -28,7 +28,6 @@ public class ChecklistRepository {
 		this.objectMapper = objectMapper;
 	}
 
-	// ---------- RowMapper ----------
 	private final RowMapper<Checklist> checklistMapper = new RowMapper<>() {
 		@Override
 		public Checklist mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -54,8 +53,6 @@ public class ChecklistRepository {
 			return c;
 		}
 	};
-
-	// ---------- CRUD methods ----------
 
 	public List<Checklist> findAll() {
 		String sql = "SELECT * FROM checklists ORDER BY created DESC";
