@@ -22,7 +22,6 @@ public class ChecklistController {
 	@Autowired
 	private ChecklistRepository checklistRepository;
 
-	// ---------- NEW: enriched detail ----------
 	@GetMapping("/checklists/{id}/detail")
 	public ResponseEntity<ChecklistDetail> getDetail(@PathVariable Integer id) {
 		return checklistRepository.findDetailById(id)
@@ -38,7 +37,6 @@ public class ChecklistController {
 		return ResponseEntity.ok(rows);
 	}
 
-	// ---------- existing endpoints (unchanged) ----------
 	@GetMapping("/checklists")
 	public ResponseEntity<List<Checklist>> getAll() {
 		List<Checklist> checklists = checklistRepository.findAll();
