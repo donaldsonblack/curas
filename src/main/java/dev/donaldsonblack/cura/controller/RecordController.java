@@ -1,53 +1,94 @@
 package dev.donaldsonblack.cura.controller;
 
+import dev.donaldsonblack.cura.model.records.Record;
+import dev.donaldsonblack.cura.model.records.RecordDetail;
+import dev.donaldsonblack.cura.model.records.RecordPatchRequest;
+import dev.donaldsonblack.cura.model.records.RecordCreateRequest;
+import dev.donaldsonblack.cura.repository.RecordRepository;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.net.URI;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import dev.donaldsonblack.cura.repository.RecordRepository;
-import dev.donaldsonblack.cura.model.Record;
-
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/records")
+@Validated
 public class RecordController {
 
-	@Autowired
-	private RecordRepository recordRepository;
+    private final RecordRepository repo;
 
-	@GetMapping("/record")
-	public List<Record> getAllRecord() {
-		return recordRepository.findAll();
-	}
+    public RecordController(RecordRepository repo) {
+        this.repo = repo;
+    }
 
-	@GetMapping("/record/{id}")
-	public ResponseEntity<Record> getById(@PathVariable Integer id) {
-		return recordRepository.findById(id)
-			.map(ResponseEntity::ok)
-			.orElseGet(() -> ResponseEntity.notFound().build());
-	}
+    // -------- Create --------
+    @PostMapping
+    public ResponseEntity<Record> create(@Valid @RequestBody RecordCreateRequest body) {
+        Record created = repo.create(body);
+        return ResponseEntity
+                .created(URI.create("/api/records/" + created.getId()))
+                .body(created);
+    }
 
-	@GetMapping("/checklists/{id}/records")
-	public List<Record> recordsByChecklist(@PathVariable Integer id) {
-		return recordRepository.recordsByChecklist(id);
-	}
+    // -------- Read (entity) --------
+    @GetMapping
+    public List<Record> list(
+            @RequestParam(required = false) Integer checklistId,
+            @RequestParam(required = false) Integer authorId
+    ) {
+        if (checklistId != null) {
+            return repo.findRecordsByChecklistId(checklistId);
+        } else if (authorId != null) {
+            return repo.findRecordsByAuthorId(authorId);
+        }
+        return repo.findAllRecords();
+    }
 
-	@PostMapping("/record")
-	public ResponseEntity<String> setRecord(@RequestBody Record r) {
-		recordRepository.insert(r);
-		return ResponseEntity.ok("Record entered successfully");
-	}
+    @GetMapping("/{id}")
+    public Record get(@PathVariable int id) {
+        return repo.findRecordById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Record " + id + " not found"));
+    }
 
-	@DeleteMapping("/record/{id}")
-	public ResponseEntity<?> deleteRecord(@PathVariable Integer id) {
-		boolean success = recordRepository.deleteById(id);
-		return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
-	}
+    // -------- Read (detail / joined) --------
+    @GetMapping("/details")
+    public List<RecordDetail> listDetails(
+            @RequestParam(required = false) Integer checklistId,
+            @RequestParam(required = false) Integer authorId
+    ) {
+        if (checklistId != null) {
+            return repo.findDetailsByChecklistId(checklistId);
+        } else if (authorId != null) {
+            return repo.findDetailsByAuthorId(authorId);
+        }
+        return repo.findAllDetails();
+    }
+
+    @GetMapping("/details/{id}")
+    public RecordDetail getDetail(@PathVariable int id) {
+        return repo.findDetailById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Record " + id + " not found"));
+    }
+
+    // -------- Patch (partial update) --------
+    @PatchMapping("/{id}")
+    public Record patch(@PathVariable int id, @Valid @RequestBody RecordPatchRequest body) {
+        return repo.patch(id, body)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Record " + id + " not found"));
+    }
+
+    // -------- Delete --------
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable int id) {
+        boolean removed = repo.deleteById(id);
+        if (!removed) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Record " + id + " not found");
+        }
+    }
 }
