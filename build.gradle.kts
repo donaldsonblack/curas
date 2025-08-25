@@ -39,6 +39,10 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.springframework.security:spring-security-jwt:1.1.1.RELEASE")
+
+	 implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+
+	 implementation("org.springframework.boot:spring-boot-starter-web")
 }
 
 

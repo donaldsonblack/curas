@@ -19,6 +19,12 @@ public class SecurityConfig {
 		http
 				.authorizeHttpRequests(authorize -> authorize
 						.requestMatchers("/hello").permitAll()
+						.requestMatchers(
+								"/v3/api-docs/**",
+								"/swagger-ui.html",
+								"/swagger-ui/**",
+								"/docs" // if you set springdoc.swagger-ui.path=/docs
+						).permitAll()
 						.requestMatchers("/api/**").authenticated()
 						.anyRequest().authenticated() // 👈 protect everything else
 				)

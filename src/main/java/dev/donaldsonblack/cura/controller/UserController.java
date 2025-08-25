@@ -1,56 +1,70 @@
 package dev.donaldsonblack.cura.controller;
 
-import dev.donaldsonblack.cura.model.User;
-import dev.donaldsonblack.cura.repository.UserRepository;
+import java.util.List;
+import java.util.UUID;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import dev.donaldsonblack.cura.model.users.User;
+import dev.donaldsonblack.cura.model.users.UserCreateRequest;
+import dev.donaldsonblack.cura.model.users.UserPatchRequest;
+import dev.donaldsonblack.cura.repository.UserRepository;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userRepository.findAll());
-    }
+	// READS
+	@GetMapping("/users")
+	public ResponseEntity<List<User>> list() {
+		return ResponseEntity.ok(userRepository.findAll());
+	}
 
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
-        return userRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+	@GetMapping("/users/{id}")
+	public ResponseEntity<User> get(@PathVariable Integer id) {
+		return userRepository.findById(id)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return userRepository.findByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+	@GetMapping("/users/by-sub/{sub}")
+	public ResponseEntity<User> getBySub(@PathVariable UUID sub) {
+		return userRepository.findByCognitoSub(sub)
+				.map(ResponseEntity::ok)
+				.orElseGet(() -> ResponseEntity.notFound().build());
+	}
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User created = userRepository.insert(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
-    }
+	// CREATE
+	@PostMapping("/users")
+	public ResponseEntity<User> create(@Valid @RequestBody UserCreateRequest req) {
+		User created = userRepository.insert(req.toUserEntity());
+		return ResponseEntity.status(HttpStatus.CREATED).body(created);
+	}
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody User user) {
-        user.setId(id);
-        boolean success = userRepository.update(user);
-        return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
-    }
+	// PATCH
+	@PatchMapping("/users/{id}")
+	public ResponseEntity<User> patch(@PathVariable Integer id, @RequestBody UserPatchRequest patch) {
+		var existingOpt = userRepository.findById(id);
+		if (existingOpt.isEmpty())
+			return ResponseEntity.notFound().build();
+		var existing = existingOpt.get();
+		patch.applyTo(existing);
+		boolean ok = userRepository.update(existing);
+		return ok ? ResponseEntity.ok(existing) : ResponseEntity.notFound().build();
+	}
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
-        boolean success = userRepository.deleteById(id);
-        return success ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
-    }
+	// DELETE
+	@DeleteMapping("/users/{id}")
+	public ResponseEntity<?> delete(@PathVariable Integer id) {
+		return userRepository.deleteById(id) ? ResponseEntity.ok().build()
+				: ResponseEntity.notFound().build();
+	}
 }
