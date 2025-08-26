@@ -38,7 +38,7 @@ public class RecordRepository {
         final String sql = """
             INSERT INTO record (checklist_id, author_id, answers)
             VALUES (?, ?, ?::jsonb)
-            RETURNING id, checklist_id, author_id, created, answers
+            RETURNING *
             """;
         return jdbc.queryForObject(
             sql,
