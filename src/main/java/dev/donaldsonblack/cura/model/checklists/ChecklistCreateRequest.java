@@ -1,43 +1,18 @@
 package dev.donaldsonblack.cura.model.checklists;
 
-import java.time.Instant;
-
 import com.fasterxml.jackson.databind.JsonNode;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
-/**
- * Incoming payload for creating a Checklist.
- * Server/DB will generate id and created timestamp.
- */
 public class ChecklistCreateRequest {
 
-	@NotBlank
-	@Size(max = 200)
 	private String name;
-
-	@Size(max = 1000)
 	private String description;
-
-	@NotBlank
-	@Size(max = 50)
 	private String type;
-
-	@NotNull
 	private Integer departmentId;
-
-	@NotNull
 	private Integer equipmentId;
-
-	@NotNull
 	private Integer authorId;
-
-	@NotNull
 	private JsonNode questions;
 
-	// ---- Constructors for Jackson / programmatic use ----
 	public ChecklistCreateRequest() {
 	}
 
@@ -51,7 +26,6 @@ public class ChecklistCreateRequest {
 		this.questions = b.questions;
 	}
 
-	// ---- Getters & Setters (needed for Jackson) ----
 	public String getName() {
 		return name;
 	}
@@ -108,7 +82,6 @@ public class ChecklistCreateRequest {
 		this.questions = questions;
 	}
 
-	// ---- Builder (convenient for tests / internal construction) ----
 	public static class Builder {
 		private String name;
 		private String description;
@@ -162,7 +135,6 @@ public class ChecklistCreateRequest {
 		return new Builder();
 	}
 
-	// ---- Helper: convert to domain entity WITHOUT id/created ----
 	public Checklist toChecklistEntity() {
 		Checklist c = new Checklist();
 		c.setName(this.name);
@@ -171,7 +143,6 @@ public class ChecklistCreateRequest {
 		c.setDepartmentId(this.departmentId);
 		c.setEquipmentId(this.equipmentId);
 		c.setAuthorId(this.authorId);
-		// created is omitted (DB default NOW()); id is omitted (DB generated)
 		c.setQuestions(this.questions);
 		return c;
 	}

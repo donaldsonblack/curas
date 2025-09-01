@@ -5,28 +5,58 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class ChecklistDetail {
 	// Checklist
-	private final int id;
-	private final String name;
-	private final String description;
-	private final String type;
-	private final Instant created;
-	private final JsonNode questions;
+	private int id;
+	private String name;
+	private String description;
+	private String type;
+	private Instant created;
+	private JsonNode questions;
 
 	// Equipment
-	private final int equipmentId;
-	private final String equipmentName;
-	private final String equipmentModel;
-	private final String equipmentSerial;
+	private int equipmentId;
+	private String equipmentName;
+	private String equipmentModel;
+	private String equipmentSerial;
 
 	// Department
-	private final int departmentId;
-	private final String departmentName;
+	private int departmentId;
+	private String departmentName;
 
 	// Author
-	private final String author;
-	private final int authorId;
+	private String author;
+	private int authorId;
 
-	// Private constructor - only accessible through Builder
+	public ChecklistDetail(
+			int id,
+			String name,
+			String description,
+			String type,
+			Instant created,
+			JsonNode questions,
+			int equipmentId,
+			String equipmentName,
+			String equipmentModel,
+			String equipmentSerial,
+			int departmentId,
+			String departmentName,
+			String author,
+			int authorId) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.type = type;
+		this.created = created;
+		this.questions = questions;
+		this.equipmentId = equipmentId;
+		this.equipmentName = equipmentName;
+		this.equipmentModel = equipmentModel;
+		this.equipmentSerial = equipmentSerial;
+		this.departmentId = departmentId;
+		this.departmentName = departmentName;
+		this.author = author;
+		this.authorId = authorId;
+	}
+
 	private ChecklistDetail(Builder builder) {
 		this.id = builder.id;
 		this.name = builder.name;
@@ -44,7 +74,6 @@ public class ChecklistDetail {
 		this.authorId = builder.authorId;
 	}
 
-	// Getters
 	public int getId() {
 		return id;
 	}
@@ -99,6 +128,62 @@ public class ChecklistDetail {
 
 	public int getAuthorId() {
 		return authorId;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void setCreated(Instant created) {
+		this.created = created;
+	}
+
+	public void setQuestions(JsonNode questions) {
+		this.questions = questions;
+	}
+
+	public void setEquipmentId(int equipmentId) {
+		this.equipmentId = equipmentId;
+	}
+
+	public void setEquipmentName(String equipmentName) {
+		this.equipmentName = equipmentName;
+	}
+
+	public void setEquipmentModel(String equipmentModel) {
+		this.equipmentModel = equipmentModel;
+	}
+
+	public void setEquipmentSerial(String equipmentSerial) {
+		this.equipmentSerial = equipmentSerial;
+	}
+
+	public void setDepartmentId(int departmentId) {
+		this.departmentId = departmentId;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
+	public void setAuthor(String author) {
+		this.author = author;
+	}
+
+	public void setAuthorId(int authorId) {
+		this.authorId = authorId;
 	}
 
 	// Builder inner class
@@ -193,7 +278,6 @@ public class ChecklistDetail {
 		}
 	}
 
-	// Static entry point for builder
 	public static Builder builder() {
 		return new Builder();
 	}

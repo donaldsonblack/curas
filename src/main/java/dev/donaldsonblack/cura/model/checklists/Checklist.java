@@ -37,7 +37,18 @@ public class Checklist {
 		this.questions = questions;
 	}
 
-	// ---------- Getters & Setters ----------
+	private Checklist(Builder builder) {
+		this.name = builder.name;
+		this.description = builder.description;
+		this.type = builder.type;
+		this.id = builder.id;
+		this.departmentId = builder.departmentId;
+		this.equipmentId = builder.equipmentId;
+		this.authorId = builder.authorId;
+		this.created = builder.created;
+		this.questions = builder.questions;
+	}
+
 	public String getName() {
 		return this.name;
 	}
@@ -167,9 +178,7 @@ public class Checklist {
 		}
 
 		public Checklist build() {
-			return new Checklist(name, description, type, id,
-					departmentId, equipmentId,
-					authorId, created, questions);
+			return new Checklist(this);
 		}
 	}
 
