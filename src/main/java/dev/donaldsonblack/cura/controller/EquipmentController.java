@@ -1,84 +1,35 @@
 package dev.donaldsonblack.cura.controller;
 
-import java.util.List;
-
-import jakarta.validation.Valid;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import dev.donaldsonblack.cura.model.equipment.Equipment;
-import dev.donaldsonblack.cura.model.equipment.EquipmentCreateRequest;
-// import dev.donaldsonblack.cura.model.equipment.EquipmentDetail;
-import dev.donaldsonblack.cura.model.equipment.EquipmentPatchRequest;
-import dev.donaldsonblack.cura.repository.EquipmentRepository;
+import dev.donaldsonblack.cura.model.Equipment;
+import dev.donaldsonblack.cura.service.EquipmentService;
+import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/equipment")
+@RequiredArgsConstructor
 public class EquipmentController {
+	
+	private final EquipmentService service;
 
-	@Autowired
-	private EquipmentRepository equipmentRepository;
-
-	// -------- READS (entity) --------
-
-	@GetMapping("/equipment")
-	public ResponseEntity<List<Equipment>> list() {
-		return ResponseEntity.ok(equipmentRepository.findAll());
+	@GetMapping
+	public Page<Equipment> getAll(Pageable pageable) {
+		return service.list(pageable);
 	}
 
-	@GetMapping("/equipment/{id}")
-	public ResponseEntity<Equipment> get(@PathVariable Integer id) {
-		return equipmentRepository.findById(id)
-				.map(ResponseEntity::ok)
-				.orElseGet(() -> ResponseEntity.notFound().build());
+	@GetMapping("/{id}")
+	public Equipment getById(@PathVariable Integer id) {
+		return service.getById(id);
 	}
 
-	// // -------- READS (detail/enriched) --------
-	//
-	// @GetMapping("/equipment/detail")
-	// public ResponseEntity<List<EquipmentDetail>> listDetail() {
-	// return ResponseEntity.ok(equipmentRepository.findDetails());
-	// }
-	//
-	// @GetMapping("/equipment/{id}/detail")
-	// public ResponseEntity<EquipmentDetail> getDetail(@PathVariable Integer id) {
-	// return equipmentRepository.findDetailById(id)
-	// .map(ResponseEntity::ok)
-	// .orElseGet(() -> ResponseEntity.notFound().build());
-	// }
-
-	// -------- CREATE --------
-
-	@PostMapping("/equipment")
-	public ResponseEntity<Equipment> create(@Valid @RequestBody EquipmentCreateRequest req) {
-		Equipment toInsert = req.toEquipmentEntity();
-		Equipment created = equipmentRepository.insert(toInsert);
-		return ResponseEntity.status(HttpStatus.CREATED).body(created);
-	}
-
-	// -------- PATCH (partial update) --------
-
-	@PatchMapping("/equipment/{id}")
-	public ResponseEntity<?> patch(@PathVariable Integer id, @RequestBody EquipmentPatchRequest patch) {
-		var existingOpt = equipmentRepository.findById(id);
-		if (existingOpt.isEmpty()) {
-			return ResponseEntity.notFound().build();
-		}
-		Equipment existing = existingOpt.get();
-		patch.applyTo(existing);
-
-		boolean ok = equipmentRepository.update(existing);
-		return ok ? ResponseEntity.ok(existing) : ResponseEntity.notFound().build();
-	}
-
-	// -------- DELETE --------
-
-	@DeleteMapping("/equipment/{id}")
-	public ResponseEntity<?> delete(@PathVariable Integer id) {
-		boolean ok = equipmentRepository.deleteById(id);
-		return ok ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public Equipment create(@RequestBody Equipment equipment) {
+		return service.save(equipment);
 	}
 }
+

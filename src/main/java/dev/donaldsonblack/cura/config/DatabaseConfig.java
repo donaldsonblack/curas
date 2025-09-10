@@ -51,6 +51,8 @@ public class DatabaseConfig {
 		dataSource.setKeepaliveTime(0);
 		dataSource.setMaxLifetime(300_000);
 
+		dataSource.setPoolName("rds-postgres-curas-dev");
+
 		return dataSource;
 	}
 

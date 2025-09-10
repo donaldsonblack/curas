@@ -1,55 +1,58 @@
 plugins {
-    id("org.springframework.boot") version "3.2.6"
-    id("io.spring.dependency-management") version "1.1.4"
+    id("org.springframework.boot") version "3.5.0"
+    id("io.spring.dependency-management") version "1.1.7"
     id("java")
     id("application")
+    id("com.gorylenko.gradle-git-properties") version "2.5.2"
 }
 
 group = "dev.donaldsonblack"
-java.sourceCompatibility = JavaVersion.VERSION_21
+java { toolchain { languageVersion.set(JavaLanguageVersion.of(21)) } }
 
-repositories {
-    mavenCentral()
-}
+repositories { mavenCentral() }
 
 dependencies {
-    // Spring Boot dependencies
+    // --- Spring Boot ---
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
-    implementation("org.postgresql:postgresql:42.7.3") 
-    implementation(platform("software.amazon.awssdk:bom:2.27.21"))
+    implementation("org.springframework.boot:spring-boot-starter-validation")
 
-    // AWS SDK for Java v2
-    implementation(platform("software.amazon.awssdk:bom:2.25.8"))
+    // Data layers (both enabled while you migrate)
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")    // JPA/Hibernate
 
-    // AWS SDK for Secrets Manager
+    // Security
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("com.nimbusds:nimbus-jose-jwt:10.4.2") // optional low-level JWT utils
+
+    // Database driver (implementation so PGobject is available at compile time)
+    implementation("org.postgresql:postgresql")
+
+    // JSON / JSONB
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
+    implementation("org.json:json:20240303") // keep org.json (legacy usages)
+
+    // AWS SDK v2 (single BOM)
+    implementation(platform("software.amazon.awssdk:bom:2.33.0"))
     implementation("software.amazon.awssdk:secretsmanager")
     implementation("software.amazon.awssdk:auth")
     implementation("software.amazon.awssdk:regions")
     implementation("software.amazon.awssdk:aws-core")
 
-    implementation("org.json:json:20090211")
+    // OpenAPI UI
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.11")
 
-    // HikariCP datasource
-    implementation("com.zaxxer:HikariCP")
-    
-    // Use for JWT and cognito authentication lateer
-    implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-    implementation("org.springframework.security:spring-security-jwt:1.1.1.RELEASE")
+    // Lombok
+    compileOnly("org.projectlombok:lombok:1.18.38")
+    annotationProcessor("org.projectlombok:lombok:1.18.38")
 
-	 implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
-
-	 implementation("org.springframework.boot:spring-boot-starter-web")
+    // Tests
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
-
 tasks.jar {
-    manifest {
-        attributes["Main-Class"] = "dev.donaldsonblack.cura.Cura"
-    }
+    manifest { attributes["Main-Class"] = "dev.donaldsonblack.cura.Cura" }
 }
 
 application {
