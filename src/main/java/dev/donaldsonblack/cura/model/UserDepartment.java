@@ -9,6 +9,10 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import java.time.Instant;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
+import dev.donaldsonblack.cura.config.JsonViews;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,14 +34,17 @@ public class UserDepartment {
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("userId")
   @JoinColumn(name = "user_id", nullable = false)
+	@JsonView(JsonViews.userMinimal.class)
   private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @MapsId("departmentId")
   @JoinColumn(name = "department_id", nullable = false)
+	@JsonView(JsonViews.departmentMinimal.class)
   private Department department;
 
   @Column(nullable = false)
+	@JsonView(JsonViews.userDepartment.class)
   private String role;
 
   @Column(nullable = false, updatable = false)
