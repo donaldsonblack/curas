@@ -21,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @Service
 @RequiredArgsConstructor
 public class UserDepartmentService {
@@ -47,19 +46,26 @@ public class UserDepartmentService {
 		return membershipRepo.findAllByDepartmentId(deptId);
 	}
 
-
+	// @Transactional(readOnly = true)
+	// public Page<UserDepartment> pagedMemberships(Integer deptId, Pageable page) {
+	// 	if (!departmentRepo.existsById(deptId)) {
+	// 		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Department not found");
+	// 	}
+	//
+	// 	return membershipRepo.findAllByDepartmentId(deptId, page);
+	// }
 
 	// @Transactional(readOnly = true)
 	// public Page<UserDepartment> membershipsForDepartment(
-	// 		Integer departmentId,
-	// 		Pageable pageable) {
-	// 	if (!departmentRepo.existsById(departmentId)) {
-	// 		throw new ResponseStatusException(
-	// 				HttpStatus.NOT_FOUND,
-	// 				"Department not found");
-	// 	}
+	// Integer departmentId,
+	// Pageable pageable) {
+	// if (!departmentRepo.existsById(departmentId)) {
+	// throw new ResponseStatusException(
+	// HttpStatus.NOT_FOUND,
+	// "Department not found");
+	// }
 	//
-	// 	return membershipRepo.findAllByDepartmentId(departmentId, pageable);
+	// return membershipRepo.findAllByDepartmentId(departmentId, pageable);
 	// }
 
 	@Transactional

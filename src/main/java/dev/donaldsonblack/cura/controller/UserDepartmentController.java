@@ -17,28 +17,24 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserDepartmentController {
 
-  private final UserDepartmentService service;
+	private final UserDepartmentService service;
 
-  @Transactional(readOnly = true)
-  @GetMapping("/user/{userId}/department")
+	@Transactional(readOnly = true)
+	@GetMapping("/user/{userId}/department")
 	@JsonView(JsonViews.departmentMinimal.class)
-  public List<UserDepartment> listForUser(@PathVariable Integer userId) {
-    return service.listMembershipForUser(userId);
-  }
+	public List<UserDepartment> listForUser(@PathVariable Integer userId) {
+		return service.listMembershipForUser(userId);
+	}
 
 	@Transactional(readOnly = true)
 	@GetMapping("/department/{deptId}/members")
 	@JsonView(JsonViews.userMinimal.class)
-	public List<UserDepartment> listMembers(@PathVariable Integer deptId){
+	public List<UserDepartment> listMembers(@PathVariable Integer deptId) {
 		return service.membershipsForDepartment(deptId);
 	}
 }

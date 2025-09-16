@@ -50,25 +50,3 @@ public class UserDepartment {
   @Column(nullable = false, updatable = false)
   private Instant created;
 }
-
-// create table user_department
-// (
-//     user_id       integer                                       not null
-//         references users
-//             on delete cascade,
-//     department_id integer                                       not null
-//         references department
-//             on delete cascade,
-//     role          text                     default 'user'::text not null,
-//     created       timestamp with time zone default now()        not null,
-//     primary key (user_id, department_id)
-// );
-
-// alter table user_department
-//     owner to postgres;
-
-// create index idx_user_department_user
-//     on user_department (user_id);
-
-// create index idx_user_department_dept
-//     on user_department (department_id);
