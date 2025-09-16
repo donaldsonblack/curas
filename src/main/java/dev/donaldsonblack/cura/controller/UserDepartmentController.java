@@ -7,6 +7,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.data.domain.Page;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,7 @@ public class UserDepartmentController {
 	@Transactional(readOnly = true)
 	@GetMapping("/department/{deptId}/members")
 	@JsonView(JsonViews.userMinimal.class)
+	@PreAuthorize("@authzService.userInDepartmentBySub(#deptId, authentication.token.claims['sub'])")
 	public List<UserDepartment> listMembers(@PathVariable Integer deptId) {
 		return service.membershipsForDepartment(deptId);
 	}
