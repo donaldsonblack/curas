@@ -1,33 +1,16 @@
-# Multi-stage Dockerfile for Spring Boot using Eclipse Temurin
-
-# 1. Build stage
 FROM eclipse-temurin:21-jdk AS build
-
-WORKDIR /app
-
-# Copy Gradle wrapper and build files
+WORKDIR /
 COPY ../gradlew .
 COPY ../gradle gradle
-COPY build.gradle.kts settings.gradle.kts ./
+COPY ../build.gradle.kts settings.gradle.kts ./
+COPY ../.git .git
 COPY src src
+RUN chmod +x gradlew
+RUN ./gradlew clean bootJar --no-daemon
 
-# Ensure the Gradle wrapper is executable, then build the jar
-RUN chmod +x gradlew \
-    && ./gradlew bootJar --no-daemon
-
-# 2. Runtime stage
-FROM eclipse-temurin:21-jre
-
-# Link back to the GitHub source repository
-LABEL org.opencontainers.image.source="https://github.com/donaldsonblack/cura-server"
-
-WORKDIR /app
-
-# Copy the built jar from the build stage
-COPY --from=build /app/build/libs/*.jar cura.jar
-
-# Expose the default Spring Boot port
+FROM eclipse-temurin
+LABEL org.opencontainers.image.source="https://github.com/donaldsonblack/cura"
+WORKDIR /curas
+COPY --from=build /build/libs/*.jar cura.jar
 EXPOSE 8080
-
-# Run the application
 ENTRYPOINT ["java", "-jar", "cura.jar"]
