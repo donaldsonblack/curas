@@ -1,6 +1,7 @@
 package dev.donaldsonblack.cura.service;
 
 import dev.donaldsonblack.cura.model.Department;
+import dev.donaldsonblack.cura.model.Role;
 import dev.donaldsonblack.cura.model.User;
 import dev.donaldsonblack.cura.model.UserDepartment;
 import dev.donaldsonblack.cura.model.UserDepartmentId;
@@ -72,7 +73,7 @@ public class UserDepartmentService {
 	public UserDepartment addMembership(
 			Integer userId,
 			Integer departmentId,
-			String role) {
+			Role role) {
 		User user = userRepo
 				.findById(userId)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not Found"));
@@ -87,7 +88,7 @@ public class UserDepartmentService {
 		var existing = membershipRepo.findById(id).orElse(null);
 
 		if (existing != null) {
-			existing.setRole(role == null ? existing.getRole() : role);
+			existing.setRole(role == null ? existing.getRole() : Role.member);
 			return membershipRepo.save(existing);
 		}
 
@@ -95,7 +96,7 @@ public class UserDepartmentService {
 		m.setId(id);
 		m.setUser(user);
 		m.setDepartment(dept);
-		m.setRole(role == null ? "user" : role);
+		m.setRole(role == null ? Role.member : role);
 		return membershipRepo.save(m);
 	}
 

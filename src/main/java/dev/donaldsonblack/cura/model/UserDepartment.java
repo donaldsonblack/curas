@@ -3,6 +3,8 @@ package dev.donaldsonblack.cura.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -43,9 +45,15 @@ public class UserDepartment {
 	@JsonView(JsonViews.departmentMinimal.class)
   private Department department;
 
-  @Column(nullable = false)
+	// TODO role enum with weight?
+	//  @Column(nullable = false)
+	// @JsonView(JsonViews.userDepartment.class)
+	//  private String role;
+
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	@JsonView(JsonViews.userDepartment.class)
-  private String role;
+	private Role role;
 
   @Column(nullable = false, updatable = false)
   private Instant created;
