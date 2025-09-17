@@ -1,0 +1,45 @@
+package dev.donaldsonblack.cura.service;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+
+import dev.donaldsonblack.cura.repository.UserRepository;
+import dev.donaldsonblack.cura.model.User;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class CognitoProvisioningService {
+	private final Logger logger = LoggerFactory.getLogger(CognitoProvisioningService.class);
+	private final UserRepository userRepository;
+
+	@Transactional
+	public User ensureUserExists(UUID sub, String email, String fName, String lName) {
+		Optional<User> existing = userRepository.findBySub(sub);
+		if (existing.isPresent()) {
+			return existing.get();
+		}
+
+		User u = User.builder()
+			.sub(sub)
+			.email(email != null ? email : "")
+			.fname(fName != null ? fName : "")
+			.lname(lName != null ? lName: "")
+			.build();
+
+		try {
+			User saved = userRepository.saveAndFlush(u);
+			logger.info("Provisioned user for cognito sub={}", sub);
+			return saved;
+		} catch (DataIntegrityViolationException ex) {
+			logger.debug("Race on insert for cognito sub={}, re-querying", sub);
+			return userRepository.findBySub(sub).orElseThrow(() -> ex);
+		}
+	}
+}
