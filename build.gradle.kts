@@ -17,7 +17,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")    // JPA/Hibernate
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+		implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.nimbusds:nimbus-jose-jwt:10.4.2") // optional low-level JWT utils
     implementation("org.postgresql:postgresql")
     implementation("com.fasterxml.jackson.core:jackson-databind")

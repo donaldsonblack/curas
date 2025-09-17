@@ -37,29 +37,29 @@ public class User {
 	@JsonView(JsonViews.userMinimal.class)
   private Integer id;
 
-  @NotBlank
+	@NotNull
   @Column(name = "cognito_sub")
   private UUID sub;
 
-  @NotBlank
-  @NotNull
+  // @NotBlank
+  // @NotNull
 	@JsonView(JsonViews.userMinimal.class)
   private String email;
 
-  @NotBlank
-  @NotNull
+  // @NotBlank
+  // @NotNull
   @Column(name = "first_name")
 	@JsonView(JsonViews.userMinimal.class)
   private String fname;
 
-  @NotBlank
-  @NotNull
+  // @NotBlank
+  // @NotNull
   @Column(name = "last_name")
 	@JsonView(JsonViews.userMinimal.class)
   private String lname;
 
-  @NotBlank
-  @NotNull
+  // @NotBlank
+  // @NotNull
   @Column(name = "created", insertable = false, updatable = false)
   private Instant created;
 
