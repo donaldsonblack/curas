@@ -6,7 +6,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+
+import dev.donaldsonblack.cura.security.CognitoProvisioningFilter;
+import lombok.AllArgsConstructor;
+
 import org.springframework.core.env.Environment;
 import org.springframework.security.config.Customizer;
 
@@ -15,9 +20,11 @@ import org.springframework.security.config.Customizer;
 public class SecurityConfig {
 
 	private final boolean devEnv;
+	private final CognitoProvisioningFilter provisioningFilter;
 
-	public SecurityConfig(Environment env) {
+	public SecurityConfig(Environment env, CognitoProvisioningFilter filter) {
 		this.devEnv = Arrays.asList(env.getActiveProfiles()).contains("dev");
+		this.provisioningFilter = filter;
 	}
 
 	@Bean
@@ -37,6 +44,7 @@ public class SecurityConfig {
 		});
 
 		http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+		http.addFilterAfter(provisioningFilter, BearerTokenAuthenticationFilter.class);
 
 		return http.build();
 	}
