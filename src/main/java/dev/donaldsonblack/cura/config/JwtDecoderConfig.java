@@ -15,8 +15,6 @@ public class JwtDecoderConfig {
   @Bean
   public JwtDecoder jwtDecoder() {
     // Create a JwtDecoder bean that uses the issuer URI from application properties
-    return NimbusJwtDecoder
-        .withJwkSetUri(issuerUri)
-        .build();
+    return NimbusJwtDecoder.withJwkSetUri(issuerUri).build();
   }
 }

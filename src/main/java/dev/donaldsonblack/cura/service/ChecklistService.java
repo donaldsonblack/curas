@@ -20,18 +20,12 @@ public class ChecklistService {
     return repo.findAll(pageable);
   }
 
-  public Page<ChecklistRepository.ChecklistListView> listLight(
-    Integer deptId,
-    Pageable pageable
-  ) {
+  public Page<ChecklistRepository.ChecklistListView> listLight(Integer deptId, Pageable pageable) {
     return repo.findAllByDepartmentId(deptId, pageable);
   }
 
   public Page<ChecklistRepository.ChecklistListView> search(
-    String q,
-    Integer deptId,
-    Pageable pageable
-  ) {
+      String q, Integer deptId, Pageable pageable) {
     return repo.searchListView(q, deptId, pageable);
   }
 
@@ -53,48 +47,49 @@ public class ChecklistService {
   }
 
   public Checklist save(ChecklistCreateRequest req) {
-    Checklist c = Checklist.builder()
-      .name(req.name())
-      .description(req.description())
-      .type(req.type())
-      .departmentId(req.deptId())
-      .equipmentId(req.equipId())
-      .authorId(req.authId())
-      .questions(req.questions())
-      .build();
+    Checklist c =
+        Checklist.builder()
+            .name(req.name())
+            .description(req.description())
+            .type(req.type())
+            .departmentId(req.deptId())
+            .equipmentId(req.equipId())
+            .authorId(req.authId())
+            .questions(req.questions())
+            .build();
 
     return repo.save(c);
   }
 
   public Optional<Checklist> patch(Integer id, ChecklistUpdateRequest req) {
-    return repo
-      .findById(id)
-      .map(cl -> {
-        req.name().ifPresent(cl::setName);
-        req.description().ifPresent(cl::setDescription);
-        req.type().ifPresent(cl::setType);
-        req.deptId().ifPresent(cl::setDepartmentId);
-        req.equipId().ifPresent(cl::setEquipmentId);
-        req.authId().ifPresent(cl::setAuthorId);
-        req.questions().ifPresent(cl::setQuestions);
+    return repo.findById(id)
+        .map(
+            cl -> {
+              req.name().ifPresent(cl::setName);
+              req.description().ifPresent(cl::setDescription);
+              req.type().ifPresent(cl::setType);
+              req.deptId().ifPresent(cl::setDepartmentId);
+              req.equipId().ifPresent(cl::setEquipmentId);
+              req.authId().ifPresent(cl::setAuthorId);
+              req.questions().ifPresent(cl::setQuestions);
 
-        return repo.save(cl);
-      });
+              return repo.save(cl);
+            });
   }
 
   public Optional<Checklist> put(Integer id, ChecklistCreateRequest req) {
-    return repo
-      .findById(id)
-      .map(cl -> {
-        cl.setName(req.name());
-        cl.setDescription(req.description());
-        cl.setType(req.type());
-        cl.setDepartmentId(req.deptId());
-        cl.setEquipmentId(req.equipId());
-        cl.setAuthorId(req.authId());
-        cl.setQuestions(req.questions());
+    return repo.findById(id)
+        .map(
+            cl -> {
+              cl.setName(req.name());
+              cl.setDescription(req.description());
+              cl.setType(req.type());
+              cl.setDepartmentId(req.deptId());
+              cl.setEquipmentId(req.equipId());
+              cl.setAuthorId(req.authId());
+              cl.setQuestions(req.questions());
 
-        return repo.save(cl);
-      });
+              return repo.save(cl);
+            });
   }
 }

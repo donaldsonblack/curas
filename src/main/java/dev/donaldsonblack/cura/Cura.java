@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 @SpringBootApplication
 public class Cura {
-	public static void main(String[] args) {
-		SpringApplication.run(Cura.class, args);
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(Cura.class, args);
+  }
 }

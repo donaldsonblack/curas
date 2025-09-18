@@ -31,10 +31,9 @@ public class ChecklistController {
   private final ChecklistService service;
 
   @Operation(
-    summary = "Retrieve all checklists",
-    description = "Returns a paginated list of all checklists.",
-    tags = { "Checklist" }
-  )
+      summary = "Retrieve all checklists",
+      description = "Returns a paginated list of all checklists.",
+      tags = {"Checklist"})
   @GetMapping
   public ResponseEntity<Page<Checklist>> getAll(Pageable pageable) {
     Page<Checklist> page = service.list(pageable);
@@ -47,41 +46,34 @@ public class ChecklistController {
   }
 
   @Operation(
-    summary = "Get a checklist by ID",
-    description = "Fetches a single checklist by its unique identifier.",
-    tags = { "Checklist" }
-  )
+      summary = "Get a checklist by ID",
+      description = "Fetches a single checklist by its unique identifier.",
+      tags = {"Checklist"})
   @GetMapping("/{id}")
   public ResponseEntity<Checklist> getById(Integer id) {
-    return service
-      .getById(id)
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
+    return service.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
   @Operation(
-    summary = "Create a new checklist",
-    description = "Creates and returns a new checklist.",
-    tags = { "Checklist" }
-  )
+      summary = "Create a new checklist",
+      description = "Creates and returns a new checklist.",
+      tags = {"Checklist"})
   @PostMapping
-  public ResponseEntity<Checklist> create(
-    @Valid @RequestBody ChecklistCreateRequest req
-  ) {
+  public ResponseEntity<Checklist> create(@Valid @RequestBody ChecklistCreateRequest req) {
     Checklist created = service.save(req);
-    URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-      .path("/{id}")
-      .buildAndExpand(created.getId())
-      .toUri();
+    URI location =
+        ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(created.getId())
+            .toUri();
 
     return ResponseEntity.created(location).body(created);
   }
 
   @Operation(
-    summary = "Delete a checklist",
-    description = "Deletes a checklist by its unique identifier.",
-    tags = { "Checklist" }
-  )
+      summary = "Delete a checklist",
+      description = "Deletes a checklist by its unique identifier.",
+      tags = {"Checklist"})
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> delete(@PathVariable Integer id) {
     service.delete(id);
@@ -89,26 +81,19 @@ public class ChecklistController {
   }
 
   @Operation(
-    summary = "Partially update a checklist",
-    description = "Applies partial updates to an existing checklist.",
-    tags = { "Checklist" }
-  )
+      summary = "Partially update a checklist",
+      description = "Applies partial updates to an existing checklist.",
+      tags = {"Checklist"})
   @PatchMapping("/{id}")
   public ResponseEntity<Checklist> patch(
-    @PathVariable Integer id,
-    @Valid @RequestBody ChecklistUpdateRequest req
-  ) {
-    return service
-      .patch(id, req)
-      .map(ResponseEntity::ok)
-      .orElse(ResponseEntity.notFound().build());
+      @PathVariable Integer id, @Valid @RequestBody ChecklistUpdateRequest req) {
+    return service.patch(id, req).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
   @Operation(
-    summary = "Replace or create a checklist",
-    description = "Replaces a checklist if it exists, or creates a new one if not.",
-    tags = { "Checklist" }
-  )
+      summary = "Replace or create a checklist",
+      description = "Replaces a checklist if it exists, or creates a new one if not.",
+      tags = {"Checklist"})
   @PutMapping("/{id}")
   public ResponseEntity<Checklist> put(Integer id, ChecklistCreateRequest req) {
     Optional<Checklist> put = service.put(id, req);
