@@ -7,13 +7,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import dev.donaldsonblack.cura.config.JsonViews;
 import dev.donaldsonblack.cura.model.Department;
-
+import dev.donaldsonblack.cura.model.UserDepartment;
 import dev.donaldsonblack.cura.service.DepartmentService;
+import dev.donaldsonblack.cura.service.UserDepartmentService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 
@@ -23,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 public class DepartmentController {
 
 	private final DepartmentService service;
+	private final UserDepartmentService userDepartmentService;
 
 	@GetMapping
 	public Page<Department> getAll(Pageable pageable) {
@@ -39,5 +49,12 @@ public class DepartmentController {
 	@ResponseStatus(HttpStatus.OK)
 	public void delete(@PathVariable Integer id) {
 		service.delete(id);
+	}
+
+	@Operation(summary = "Get members of department")
+	@GetMapping("/{deptId}/members")
+	@JsonView(JsonViews.userMinimal.class)
+	public List<UserDepartment> listMembersForDepartment(@PathVariable Integer deptId) {
+		return userDepartmentService.membershipsForDepartment(deptId);
 	}
 }
