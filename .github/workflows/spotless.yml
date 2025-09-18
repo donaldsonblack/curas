@@ -1,5 +1,4 @@
-# .github/workflows/spotless.yml
-name: Spotless (format & commit)
+name: Format
 
 on:
   push:
