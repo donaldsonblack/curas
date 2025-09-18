@@ -1,13 +1,13 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: [Format]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
-  contents: write    # needed to commit the bumped version
+  contents: write # needed to commit the bumped version
 
 jobs:
   build:
