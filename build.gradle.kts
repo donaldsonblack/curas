@@ -4,6 +4,7 @@ plugins {
     id("java")
     id("application")
     id("com.gorylenko.gradle-git-properties") version "2.5.2"
+    id("com.diffplug.spotless") version "7.2.1"
 }
 
 group = "dev.donaldsonblack"
@@ -51,7 +52,19 @@ application {
 springBoot {
     buildInfo {
         properties {
-						version = providers.gradleProperty("version") 
+						version = providers.gradleProperty("version")
         }
+    }
+}
+
+
+spotless {
+    java {
+        googleJavaFormat("1.22.0").reflowLongStrings()
+        target("**/*.java")
+    }
+    kotlin {
+        ktfmt().googleStyle()
+        target("**/*.kt")
     }
 }
