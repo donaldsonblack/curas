@@ -11,9 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApiAccessEventListener {
 
-  private static final Logger logger = LoggerFactory.getLogger(
-    ApiAccessEventListener.class
-  );
+  private static final Logger logger = LoggerFactory.getLogger(ApiAccessEventListener.class);
 
   // ANSI colors
   private static final String RESET = "\u001B[0m";
@@ -26,27 +24,24 @@ public class ApiAccessEventListener {
   private static final String WHITE = "\u001B[37m"; // user id / ip
   private static final String GRAY = "\u001B[90m"; // timestamp
 
-  private static final DateTimeFormatter TS_FMT = DateTimeFormatter.ofPattern(
-    "yyyy-MM-dd HH:mm:ss"
-  );
+  private static final DateTimeFormatter TS_FMT =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
   @EventListener
   public void handleApiAccess(ApiAccessEvent e) {
     // Color by HTTP method
-    String methodColor = switch (e.getMethod()) {
-      case "GET" -> GREEN;
-      case "POST" -> BLUE;
-      case "PUT" -> YELLOW;
-      case "DELETE" -> RED;
-      default -> CYAN;
-    };
+    String methodColor =
+        switch (e.getMethod()) {
+          case "GET" -> GREEN;
+          case "POST" -> BLUE;
+          case "PUT" -> YELLOW;
+          case "DELETE" -> RED;
+          default -> CYAN;
+        };
 
     // Color by status range
-    String statusColor = (e.getStatusCode() >= 500)
-      ? RED
-      : (e.getStatusCode() >= 400)
-        ? YELLOW
-        : GREEN;
+    String statusColor =
+        (e.getStatusCode() >= 500) ? RED : (e.getStatusCode() >= 400) ? YELLOW : GREEN;
 
     String ts = LocalDateTime.now().format(TS_FMT);
 
@@ -60,17 +55,17 @@ public class ApiAccessEventListener {
     String coloredStatus = statusColor + e.getStatusCode() + RESET;
 
     // Final message
-    String msg = String.format(
-      "%s %s → %s | User: %s (ID: %s) | IP: %s | Status: %s (%dms)",
-      coloredTime,
-      coloredMethod,
-      coloredEndpoint,
-      coloredUser,
-      coloredUserId,
-      coloredIp,
-      coloredStatus,
-      e.getDuration()
-    );
+    String msg =
+        String.format(
+            "%s %s → %s | User: %s (ID: %s) | IP: %s | Status: %s (%dms)",
+            coloredTime,
+            coloredMethod,
+            coloredEndpoint,
+            coloredUser,
+            coloredUserId,
+            coloredIp,
+            coloredStatus,
+            e.getDuration());
 
     // Level based on status
     if (e.getStatusCode() >= 500) {

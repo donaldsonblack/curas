@@ -30,10 +30,7 @@ public class ApiAccessLoggingInterceptor implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    Object handler
-  ) {
+      HttpServletRequest request, HttpServletResponse response, Object handler) {
     // Basic request metadata
     request.setAttribute(ATTR_START_TIME, System.currentTimeMillis());
     request.setAttribute(ATTR_METHOD, request.getMethod());
@@ -41,8 +38,7 @@ public class ApiAccessLoggingInterceptor implements HandlerInterceptor {
     request.setAttribute(ATTR_CLIENT_IP, extractClientIp(request));
 
     // Extract user from SecurityContext
-    Authentication auth =
-      SecurityContextHolder.getContext().getAuthentication();
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     String userId = "anonymous";
     String userName = "anonymous";
 
@@ -63,11 +59,10 @@ public class ApiAccessLoggingInterceptor implements HandlerInterceptor {
 
   @Override
   public void afterCompletion(
-    HttpServletRequest request,
-    HttpServletResponse response,
-    Object handler,
-    @Nullable Exception ex
-  ) {
+      HttpServletRequest request,
+      HttpServletResponse response,
+      Object handler,
+      @Nullable Exception ex) {
     Object startObj = request.getAttribute(ATTR_START_TIME);
     long elapsed = 0L;
     if (startObj instanceof Long start) {
@@ -82,15 +77,7 @@ public class ApiAccessLoggingInterceptor implements HandlerInterceptor {
     int status = response.getStatus();
 
     // Publish enriched event (status + duration)
-    eventPublisher.publishApiAccess(
-      userId,
-      endpoint,
-      method,
-      clientIp,
-      userName,
-      status,
-      elapsed
-    );
+    eventPublisher.publishApiAccess(userId, endpoint, method, clientIp, userName, status, elapsed);
   }
 
   // ——————————————————— helpers ———————————————————

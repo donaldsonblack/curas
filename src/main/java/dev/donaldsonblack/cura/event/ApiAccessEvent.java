@@ -8,11 +8,11 @@ import lombok.Setter;
 @Setter
 @Getter
 public class ApiAccessEvent {
-	private final String userid;
-	private final String endpoint;
-	private final String method;
-	private final String ip;
-	private final String userName;
-	private final Integer statusCode;
-	private final long duration;
+  private final String userid;
+  private final String endpoint;
+  private final String method;
+  private final String ip;
+  private final String userName;
+  private final Integer statusCode;
+  private final long duration;
 }

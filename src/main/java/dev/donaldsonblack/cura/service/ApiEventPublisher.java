@@ -12,8 +12,15 @@ public class ApiEventPublisher {
     this.publisher = publisher;
   }
 
-	public void publishApiAccess(String id, String endpoint, String method, String ip, String name, Integer statuscode, long duration) {
-		ApiAccessEvent event = new ApiAccessEvent(id, endpoint, method, ip, name, statuscode, duration);
-		publisher.publishEvent(event);
-	}
+  public void publishApiAccess(
+      String id,
+      String endpoint,
+      String method,
+      String ip,
+      String name,
+      Integer statuscode,
+      long duration) {
+    ApiAccessEvent event = new ApiAccessEvent(id, endpoint, method, ip, name, statuscode, duration);
+    publisher.publishEvent(event);
+  }
 }
