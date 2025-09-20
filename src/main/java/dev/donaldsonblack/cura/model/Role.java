@@ -10,8 +10,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum Role {
 	member(0, "Member"),
-	manager(20, "Manager"),
-	admin(50, "Admin"),
+	USER(0, "User"),
+	MANAGER(20, "Manager"),
+	ADMIN(50, "Admin"),
 	viewer(0, "Viewer"),
 	tech(0, "Tech");
 
