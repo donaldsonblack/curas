@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.donaldsonblack.cura.config.JsonViews;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -55,6 +57,10 @@ public class User {
   @JsonView(JsonViews.userMinimal.class)
   private String lname;
 
+	@Column(name = "role")
+	@Enumerated(EnumType.STRING)
+	private Role role;
+
   // @NotBlank
   // @NotNull
   @Column(name = "created", insertable = false, updatable = false)
@@ -66,18 +72,3 @@ public class User {
   private Set<UserDepartment> memberships = new HashSet<>();
 }
 
-// create table users
-// (
-//     id          serial
-//         primary key,
-//     cognito_sub uuid not null
-//         unique,
-//     email       text not null
-//         unique,
-//     created     timestamp with time zone default now(),
-//     first_name  text not null,
-//     last_name   text
-// );
-
-// alter table users
-//     owner to postgres;
