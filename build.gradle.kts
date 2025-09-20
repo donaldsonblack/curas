@@ -1,9 +1,10 @@
 plugins {
-    id("org.springframework.boot") version "3.5.0"
+    id("org.springframework.boot") version "3.5.5"
     id("io.spring.dependency-management") version "1.1.7"
     id("java")
     id("application")
     id("com.gorylenko.gradle-git-properties") version "2.5.2"
+    id("com.diffplug.spotless") version "7.2.1"
 }
 
 group = "dev.donaldsonblack"
@@ -17,7 +18,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")    // JPA/Hibernate
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+		implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.nimbusds:nimbus-jose-jwt:10.4.2") // optional low-level JWT utils
     implementation("org.postgresql:postgresql")
     implementation("com.fasterxml.jackson.core:jackson-databind")
@@ -49,7 +52,19 @@ application {
 springBoot {
     buildInfo {
         properties {
-						version = providers.gradleProperty("version") 
+						version = providers.gradleProperty("version")
         }
+    }
+}
+
+
+spotless {
+    java {
+        googleJavaFormat("1.22.0").reflowLongStrings()
+        target("**/*.java")
+    }
+    kotlin {
+        ktfmt().googleStyle()
+        target("**/*.kt")
     }
 }

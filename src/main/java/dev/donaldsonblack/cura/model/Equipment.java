@@ -14,23 +14,19 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Equipment {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
-	private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @EqualsAndHashCode.Include
+  private Integer id;
 
-	@Column(name = "department_id")
-	private Integer departmentId;
+  @Column(name = "department_id")
+  private Integer departmentId;
 
-	@NotBlank
-	private String serial;
+  @NotBlank private String serial;
 
-	@NotBlank
-	private String model;
+  @NotBlank private String model;
 
-	@NotBlank
-	private String name;
-
+  @NotBlank private String name;
 }
 
 // create table equipment
