@@ -37,6 +37,7 @@ public class UserService {
             .lname(req.lname())
             .email(req.email())
             .sub(req.sub())
+						.role(req.role())
             .build();
 
     return repo.save(user);
@@ -54,6 +55,7 @@ public class UserService {
               req.lname().ifPresent(user::setLname);
               req.email().ifPresent(user::setEmail);
               req.sub().ifPresent(user::setSub);
+							req.role().ifPresent(user::setRole);
 
               return repo.save(user);
             });
@@ -67,6 +69,7 @@ public class UserService {
               user.setLname(req.lname());
               user.setEmail(req.email());
               user.setSub(req.sub());
+							user.setRole(req.role());
 
               return repo.save(user);
             });
