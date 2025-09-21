@@ -32,7 +32,5 @@ spring.log
 /jacoco.exec
 node_modules/
 dist/
-gradlew
 gradlew.bat
-gradle/*
 .factorypath
