@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21-jdk AS build
+FROM openjdk:25-slim AS build
 WORKDIR /
 COPY ../gradlew .
 COPY ../gradle gradle
@@ -8,7 +8,7 @@ COPY src src
 RUN chmod +x gradlew
 RUN ./gradlew clean bootJar --no-daemon
 
-FROM eclipse-temurin
+FROM openjdk:25-slim 
 LABEL org.opencontainers.image.source="https://github.com/donaldsonblack/cura"
 WORKDIR /curas
 COPY --from=build /build/libs/*.jar cura.jar
