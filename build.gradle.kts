@@ -1,7 +1,7 @@
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
-    id("org.springframework.boot") version "3.5.6"
+		id("org.springframework.boot") version "4.0.0-M3"
     id("io.spring.dependency-management") version "1.1.7"
     id("java")
     id("application")
@@ -27,7 +27,7 @@ dependencies {
     implementation("com.nimbusds:nimbus-jose-jwt:10.4.2") // optional low-level JWT utils
     implementation("org.postgresql:postgresql")
     implementation("com.fasterxml.jackson.core:jackson-databind")
-    implementation("com.vladmihalcea:hibernate-types-60:2.21.1")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-71:3.11.0")
     implementation("org.json:json:20240303") // keep org.json (legacy usages)
     implementation(platform("software.amazon.awssdk:bom:2.33.0"))
     implementation("software.amazon.awssdk:secretsmanager")
