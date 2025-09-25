@@ -46,23 +46,20 @@ public class ChecklistController {
     return ResponseEntity.ok(page);
   }
 
-	@Operation(
-	summary = "Retrive all checklists for human readable",
-	description = "Fetches all checklists, but replaces Ids with names for view in ui",
-	tags = {"Checklist"}
-	)
-	@GetMapping("/table")
-	public ResponseEntity<Page<ChecklistTableView>> getTableView(Pageable pageable) {
-		Page<ChecklistTableView> page = service.tableView(pageable);
+  @Operation(
+      summary = "Retrive all checklists for human readable",
+      description = "Fetches all checklists, but replaces Ids with names for view in ui",
+      tags = {"Checklist"})
+  @GetMapping("/table")
+  public ResponseEntity<Page<ChecklistTableView>> getTableView(Pageable pageable) {
+    Page<ChecklistTableView> page = service.tableView(pageable);
 
-		if (page.isEmpty()) {
-			return ResponseEntity.noContent().build();
-		}
+    if (page.isEmpty()) {
+      return ResponseEntity.noContent().build();
+    }
 
-		return ResponseEntity.ok(page);
-	}
-
-
+    return ResponseEntity.ok(page);
+  }
 
   @Operation(
       summary = "Get a checklist by ID",

@@ -30,9 +30,9 @@ public class ChecklistService {
     return repo.searchListView(q, deptId, pageable);
   }
 
-	public Page<ChecklistTableView> tableView(Pageable pageable) {
-		return repo.tableViewPage(pageable);
-	}
+  public Page<ChecklistTableView> tableView(Pageable pageable) {
+    return repo.tableViewPage(pageable);
+  }
 
   // public Checklist getById(Integer id) {
   // 	return repo.findById(id)
