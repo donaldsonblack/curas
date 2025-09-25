@@ -1,6 +1,7 @@
 package dev.donaldsonblack.cura.service;
 
 import dev.donaldsonblack.cura.dto.checklist.ChecklistCreateRequest;
+import dev.donaldsonblack.cura.dto.checklist.ChecklistTableView;
 import dev.donaldsonblack.cura.dto.checklist.ChecklistUpdateRequest;
 import dev.donaldsonblack.cura.model.Checklist;
 import dev.donaldsonblack.cura.repository.ChecklistRepository;
@@ -28,6 +29,10 @@ public class ChecklistService {
       String q, Integer deptId, Pageable pageable) {
     return repo.searchListView(q, deptId, pageable);
   }
+
+	public Page<ChecklistTableView> tableView(Pageable pageable) {
+		return repo.tableViewPage(pageable);
+	}
 
   // public Checklist getById(Integer id) {
   // 	return repo.findById(id)
