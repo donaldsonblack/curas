@@ -1,7 +1,7 @@
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
-		id("org.springframework.boot") version "4.0.0-M3"
+    id("org.springframework.boot") version "4.0.0-M3"
     id("io.spring.dependency-management") version "1.1.7"
     id("java")
     id("application")
@@ -15,7 +15,7 @@ java { toolchain { languageVersion.set(JavaLanguageVersion.of(25)) } }
 repositories { mavenCentral() }
 
 dependencies {
-		implementation("org.springframework:spring-core")
+    implementation("org.springframework:spring-core")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -23,7 +23,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
-		implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("com.nimbusds:nimbus-jose-jwt:10.4.2") // optional low-level JWT utils
     implementation("org.postgresql:postgresql")
     implementation("com.fasterxml.jackson.core:jackson-databind")
@@ -41,11 +41,11 @@ dependencies {
 }
 
 tasks.jar {
-    manifest { attributes["Main-Class"] = "dev.donaldsonblack.cura.Cura" }
+    manifest { attributes["Main-Class"] = "com.dblck.curas.Curas" }
 }
 
 application {
-    mainClass.set("dev.donaldsonblack.cura.Cura")
+    mainClass.set("com.dblck.curas.Curas")
 }
 
 tasks.named<BootRun>("bootRun") {
@@ -57,7 +57,7 @@ tasks.named<BootRun>("bootRun") {
 springBoot {
     buildInfo {
         properties {
-						version = providers.gradleProperty("version")
+            version = providers.gradleProperty("version")
         }
     }
 }
