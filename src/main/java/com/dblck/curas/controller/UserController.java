@@ -1,6 +1,5 @@
 package com.dblck.curas.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.dblck.curas.config.JsonViews;
 import com.dblck.curas.dto.user.UserCreateRequest;
 import com.dblck.curas.dto.user.UserUpdateRequest;
@@ -8,6 +7,7 @@ import com.dblck.curas.model.User;
 import com.dblck.curas.model.UserDepartment;
 import com.dblck.curas.service.UserDepartmentService;
 import com.dblck.curas.service.UserService;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import java.net.URI;

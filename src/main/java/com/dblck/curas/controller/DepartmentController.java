@@ -1,6 +1,5 @@
 package com.dblck.curas.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.dblck.curas.config.JsonViews;
 import com.dblck.curas.dto.department.DepartmentCreateRequest;
 import com.dblck.curas.dto.department.DepartmentUpdateRequest;
@@ -8,6 +7,7 @@ import com.dblck.curas.model.Department;
 import com.dblck.curas.model.UserDepartment;
 import com.dblck.curas.service.DepartmentService;
 import com.dblck.curas.service.UserDepartmentService;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;

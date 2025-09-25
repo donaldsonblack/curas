@@ -1,7 +1,7 @@
 package com.dblck.curas.model;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.dblck.curas.config.JsonViews;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

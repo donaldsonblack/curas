@@ -1,8 +1,8 @@
 package com.dblck.curas.model;
 
+import com.dblck.curas.config.JsonViews;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.dblck.curas.config.JsonViews;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
