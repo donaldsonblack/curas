@@ -13,6 +13,9 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: dev
+      url: https://api.curas.dblck.com
 
     steps:
       - name: Configure AWS
