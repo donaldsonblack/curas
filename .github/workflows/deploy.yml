@@ -14,8 +14,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     environment:
-      name: dev
+      name: development
       url: https://api.curas.dblck.com
+    concurrency:
+      group: development
+      cancel-in-progress: true
 
     steps:
       - name: Configure AWS
