@@ -28,7 +28,6 @@ jobs:
           fi
 
           OLD_VERSION="$(grep -E '^version=' "$FILE" | sed 's/^version=//')"
-          # strip possible -SNAPSHOT
           CORE_VERSION="${OLD_VERSION%-SNAPSHOT}"
 
           IFS='.' read -r MAJ MIN PAT <<< "$CORE_VERSION"
@@ -38,7 +37,6 @@ jobs:
 
           NEW_VERSION="$MAJ.$MIN.$((PAT + 1))"
 
-          # write back
           sed -i.bak -E "s/^version=.*/version=${NEW_VERSION}/" "$FILE"
           rm -f "$FILE.bak"
 
@@ -59,16 +57,10 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+      - name: Login to Harbor
+        run: |
+          echo "${{ secrets.HARBOR_ROBOT_PASSWORD }}" | \
+            docker login cr.blac.dev -u "${{ secrets.HARBOR_ROBOT_USERNAME }}" --password-stdin
 
       - name: Extract version from gradle.properties
         id: extract_version
@@ -79,11 +71,9 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t ${{ secrets.AWS_ECR_REPOSITORY }}:$VERSION -t ${{ secrets.AWS_ECR_REPOSITORY }}:latest .
-          docker tag ${{ secrets.AWS_ECR_REPOSITORY }}:$VERSION ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:$VERSION
-          docker tag ${{ secrets.AWS_ECR_REPOSITORY }}:latest ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+          docker build -t cr.blac.dev/curas/server:$VERSION -t cr.blac.dev/curas/server:latest .
 
-      - name: Push Docker image to ECR
+      - name: Push Docker image to Harbor
         run: |
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:${{ steps.bump.outputs.new }}
-          docker push ${{ steps.login-ecr.outputs.registry }}/${{ secrets.AWS_ECR_REPOSITORY }}:latest
+          docker push cr.blac.dev/curas/server:${{ steps.bump.outputs.new }}
+          docker push cr.blac.dev/curas/server:latest
