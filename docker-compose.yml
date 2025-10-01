@@ -1,0 +1,9 @@
+services:
+  curas-server:
+    image: cr.blac.dev/curas/server:latest
+    container_name: curas 
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
