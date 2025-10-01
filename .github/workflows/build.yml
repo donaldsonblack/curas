@@ -73,7 +73,9 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t cr.blac.dev/curas/server:$VERSION -t cr.blac.dev/curas/server:latest .
+          docker build --network=host \
+            -t cr.blac.dev/curas/server:$VERSION \
+            -t cr.blac.dev/curas/server:latest .
 
       - name: Push Docker image to Harbor
         run: |
