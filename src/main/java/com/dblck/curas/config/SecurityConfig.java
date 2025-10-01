@@ -36,6 +36,7 @@ public class SecurityConfig {
         });
 
     http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+		http.cors(Customizer.withDefaults());
 
     return http.build();
   }
