@@ -11,27 +11,26 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class CognitoUserInfoClient {
 
-  private String userInfoUri;
+	private String userInfoUri;
 
-  private final RestTemplate restTemplate;
+	private final RestTemplate restTemplate;
 
-  public CognitoUserInfoClient(@Value("${aws.cognito.domain.userInfo}") String userInfoUri) {
-    this.restTemplate = new RestTemplate();
-    this.userInfoUri =
-        Objects.requireNonNull(userInfoUri, "aws.cognito.userinfo-uri must be configured");
-  }
+	public CognitoUserInfoClient(@Value("${aws.cognito.domain}") String userInfoUri) {
+		this.restTemplate = new RestTemplate();
+		this.userInfoUri = Objects.requireNonNull(userInfoUri + "/oauth2/userInfo",
+				"aws.cognito.userinfo-uri must be configured");
+	}
 
-  public Map<String, Object> getUserInfo(String accessToken) {
-    HttpHeaders headers = new HttpHeaders();
-    headers.setBearerAuth(accessToken);
-    headers.setAccept(java.util.List.of(MediaType.APPLICATION_JSON));
+	public Map<String, Object> getUserInfo(String accessToken) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setBearerAuth(accessToken);
+		headers.setAccept(java.util.List.of(MediaType.APPLICATION_JSON));
 
-    HttpEntity<Void> entity = new HttpEntity<>(headers);
+		HttpEntity<Void> entity = new HttpEntity<>(headers);
 
-    ResponseEntity<Map> response =
-        restTemplate.exchange(userInfoUri, HttpMethod.GET, entity, Map.class);
+		ResponseEntity<Map> response = restTemplate.exchange(userInfoUri, HttpMethod.GET, entity, Map.class);
 
-    // copy to mutable map to avoid UnsupportedOperationException
-    return new HashMap<>(response.getBody());
-  }
+		// copy to mutable map to avoid UnsupportedOperationException
+		return new HashMap<>(response.getBody());
+	}
 }

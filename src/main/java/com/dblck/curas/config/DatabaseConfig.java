@@ -1,6 +1,9 @@
 package com.dblck.curas.config;
 
 import com.zaxxer.hikari.HikariDataSource;
+
+import jakarta.validation.constraints.NotBlank;
+
 import javax.sql.DataSource;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,12 +20,15 @@ public class DatabaseConfig {
   private String username;
 
   @Value("${aws.rds.endpoint}")
+	@NotBlank(message = "Database URL required")
   private String url;
 
-  @Value("${aws.secret.region}")
+  @Value("${aws.region}")
+	@NotBlank(message = "AWS region required for RDS password")
   private String secretRegion;
 
-  @Value("${aws.secret.name}")
+  @Value("${aws.rds.secret.name}")
+	@NotBlank(message = "AWS secret name required for RDS password")
   private String secretName;
 
   @Bean
