@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 @Configuration
 public class JwtDecoderConfig {
 
-  @Value("${issuer-uri}")
+  @Value("${aws.cognito.issuer-uri}")
   private String issuerUri;
 
   @Bean
