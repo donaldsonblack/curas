@@ -27,7 +27,7 @@ public class SecurityConfig {
         auth -> {
           if (devEnv) {
             auth.requestMatchers(
-                    "/hello", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/docs")
+                    "/hello", "/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/docs", "/actuator/**")
                 .permitAll();
           }
 
