@@ -12,3 +12,14 @@ services:
       - .env
     ports:
       - "8080:8080"
+  redis:
+    image: redis:8.2.2
+    command:
+      - redis-server
+      - --save ""
+      - --appendonly no
+      - --maxmemory 512mb
+      - --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
