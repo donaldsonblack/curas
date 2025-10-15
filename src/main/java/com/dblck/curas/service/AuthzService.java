@@ -26,7 +26,6 @@ public class AuthzService {
     return userDepartmentRepository.existsById(new UserDepartmentId(userId, deptId));
   }
 
-  @Cacheable(value = USER_DEPT_CACHE, key = "'equip:' + #p1 + ':user:' + #p0")
   public boolean userInDepartmentOfEquipment(Integer userId, Integer equipId) {
     Equipment equip = equipmentRepository.getReferenceById(equipId);
     Integer deptId = equip.getDepartmentId();
