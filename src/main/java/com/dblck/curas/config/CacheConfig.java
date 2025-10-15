@@ -1,4 +1,4 @@
-package dev.donaldsonblack.cura.config;
+package com.dblck.curas.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
