@@ -3,9 +3,14 @@ package com.dblck.curas.service;
 import com.dblck.curas.dto.department.DepartmentCreateRequest;
 import com.dblck.curas.dto.department.DepartmentUpdateRequest;
 import com.dblck.curas.model.Department;
+import com.dblck.curas.model.UserDepartment;
 import com.dblck.curas.repository.DepartmentRepository;
+import com.dblck.curas.repository.UserDepartmentRepository;
+import com.dblck.curas.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,6 +23,10 @@ import org.springframework.stereotype.Service;
 public class DepartmentService {
 
 	private final DepartmentRepository repo;
+	private final UserDepartmentRepository membershipRepo;
+	private final UserRepository userRepo;
+	private final CacheManager cacheManager;
+
 	private static final String DEPT_CACHE = "deptById";
 
 	public Page<Department> list(Pageable pageable) {
@@ -31,6 +40,34 @@ public class DepartmentService {
 
 	@CacheEvict(value = DEPT_CACHE, key = "#p0")
 	public void delete(Integer id) {
+		var members = membershipRepo.findAllByDepartmentId(id);
+
+		Cache membershipsByDepartment = cacheManager.getCache("membershipsByDepartment");
+		if (membershipsByDepartment != null) {
+			membershipsByDepartment.evict(id);
+		}
+
+		Cache membershipsByUser = cacheManager.getCache("membershipsByUser");
+		Cache userInDept = cacheManager.getCache("userInDept");
+		Cache authz = cacheManager.getCache("authz");
+
+		for (UserDepartment m : members) {
+			Integer userId = m.getUser().getId();
+			if (membershipsByUser != null) {
+				membershipsByUser.evict(userId);
+			}
+			if (userInDept != null) {
+				userInDept.evict("dept:" + id + ":user:" + userId);
+			}
+			if (authz != null) {
+				userRepo.findById(userId).ifPresent(u -> {
+					if (u.getSub() != null) {
+						authz.evict("dept:" + id + ":sub:" + u.getSub());
+					}
+				});
+			}
+		}
+
 		repo.deleteById(id);
 	}
 
