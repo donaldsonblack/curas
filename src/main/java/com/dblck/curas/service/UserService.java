@@ -6,6 +6,9 @@ import com.dblck.curas.model.User;
 import com.dblck.curas.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,21 +18,18 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
   private final UserRepository repo;
+  private static final String USER_CACHE = "userById";
 
   public Page<User> list(Pageable pageable) {
     return repo.findAll(pageable);
   }
 
-  // public User getById(Integer id) {
-  // return repo
-  // .findById(id)
-  // .orElseThrow(() -> new IllegalArgumentException("User not found: " + id));
-  // }
-
+  @Cacheable(value = USER_CACHE, key = "#p0")
   public Optional<User> getById(Integer id) {
     return repo.findById(id);
   }
 
+  @CachePut(value = USER_CACHE, key = "#result.id", unless = "#result == null")
   public User save(UserCreateRequest req) {
     User user =
         User.builder()
@@ -42,10 +42,12 @@ public class UserService {
     return repo.save(user);
   }
 
+  @CacheEvict(value = USER_CACHE, key = "#p0")
   public void delete(Integer id) {
     repo.deleteById(id);
   }
 
+  @CacheEvict(value = USER_CACHE, key = "#p0")
   public Optional<User> updateUser(Integer id, UserUpdateRequest req) {
     return repo.findById(id)
         .map(
@@ -59,6 +61,7 @@ public class UserService {
             });
   }
 
+  @CacheEvict(value = USER_CACHE, key = "#p0")
   public Optional<User> putUser(Integer id, UserCreateRequest req) {
     return repo.findById(id)
         .map(
