@@ -1,0 +1,36 @@
+meta {
+  name: Update (Patch)
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{base_url}}/api/equipment/{{equipment_id}}
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "serial": "{{equipment_patch_serial}}",
+    "model": "{{equipment_patch_model}}",
+    "name": "{{equipment_patch_name}}"
+  }
+}
+
+vars:pre-request {
+  equipment_id: 1
+  equipment_patch_serial: EQ-001-REV1
+  equipment_patch_model: Model X100
+  equipment_patch_name: Generator Rev 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

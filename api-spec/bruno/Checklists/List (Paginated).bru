@@ -1,0 +1,32 @@
+meta {
+  name: List (Paginated)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/checklists
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+params:query {
+  page: {{checklists_page}}
+  size: {{checklists_page_size}}
+  sort: {{checklists_sort}}
+}
+
+vars:pre-request {
+  checklists_page: 0
+  checklists_page_size: 20
+  checklists_sort: id,asc
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

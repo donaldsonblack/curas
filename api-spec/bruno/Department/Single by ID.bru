@@ -1,0 +1,24 @@
+meta {
+  name: Single by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/api/department/{{department_id}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+vars:pre-request {
+  department_id: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Single by ID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/api/checklists/{{checklist_id}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+vars:pre-request {
+  checklist_id: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

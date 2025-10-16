@@ -1,0 +1,36 @@
+meta {
+  name: Update (Patch)
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{base_url}}/api/checklists/{{checklist_id}}
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "name": "{{checklist_patch_name}}",
+    "description": "{{checklist_patch_description}}",
+    "type": "{{checklist_patch_type}}"
+  }
+}
+
+vars:pre-request {
+  checklist_id: 1
+  checklist_patch_name: Updated Safety Audit Checklist
+  checklist_patch_description: Updated description for audit checklist
+  checklist_patch_type: routine
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,37 @@
+meta {
+  name: Create
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/api/user
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "fname": "{{user_first_name}}",
+    "lname": "{{user_last_name}}",
+    "email": "{{user_email}}",
+    "sub": "{{user_sub}}"
+  }
+}
+
+vars:pre-request {
+  user_first_name: Ada
+  user_last_name: Lovelace
+  user_email: ada.lovelace@example.com
+  user_sub: 123e4567-e89b-12d3-a456-426614174000
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

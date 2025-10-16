@@ -1,0 +1,32 @@
+meta {
+  name: List (Paginated)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/user
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+params:query {
+  page: {{user_page}}
+  size: {{user_page_size}}
+  sort: {{user_sort}}
+}
+
+vars:pre-request {
+  user_page: 0
+  user_page_size: 20
+  user_sort: id,asc
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

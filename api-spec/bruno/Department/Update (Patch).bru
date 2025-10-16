@@ -1,0 +1,34 @@
+meta {
+  name: Update (Patch)
+  type: http
+  seq: 5
+}
+
+patch {
+  url: {{base_url}}/api/department/{{department_id}}
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "name": "{{department_patch_name}}",
+    "location": "{{department_patch_location}}"
+  }
+}
+
+vars:pre-request {
+  department_id: 1
+  department_patch_name: Engineering - East Wing
+  department_patch_location: HQ - Building B
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

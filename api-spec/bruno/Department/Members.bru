@@ -1,0 +1,24 @@
+meta {
+  name: Members
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/api/department/{{department_id}}/members
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+vars:pre-request {
+  department_id: 1
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
