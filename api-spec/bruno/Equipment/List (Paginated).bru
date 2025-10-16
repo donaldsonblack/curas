@@ -1,0 +1,15 @@
+meta {
+  name: List (Paginated)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/equipment
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
