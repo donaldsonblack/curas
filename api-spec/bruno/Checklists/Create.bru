@@ -1,0 +1,56 @@
+meta {
+  name: Create
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/api/checklists
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "name": "{{checklist_name}}",
+    "description": "{{checklist_description}}",
+    "type": "{{checklist_type}}",
+    "deptId": {{checklist_dept_id}},
+    "equipId": {{checklist_equip_id}},
+    "authId": {{checklist_auth_id}},
+    "questions": [
+      {
+        "prompt": "{{checklist_question_prompt}}",
+        "type": "{{checklist_question_type}}",
+        "required": {{checklist_question_required}},
+        "options": [
+          "{{checklist_question_option_one}}",
+          "{{checklist_question_option_two}}"
+        ]
+      }
+    ]
+  }
+}
+
+vars:pre-request {
+  checklist_name: Safety Audit Checklist
+  checklist_description: Routine inspection checklist
+  checklist_type: routine
+  checklist_dept_id: 1
+  checklist_equip_id: 1
+  checklist_auth_id: 1
+  checklist_question_prompt: Are all safety guards in place?
+  checklist_question_type: multiple-choice
+  checklist_question_required: true
+  checklist_question_option_one: Yes
+  checklist_question_option_two: No
+}
+
+settings {
+  encodeUrl: true
+}

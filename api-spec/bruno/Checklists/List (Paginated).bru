@@ -5,14 +5,25 @@ meta {
 }
 
 get {
-  url: {{base_url}}/api/checklists?page=0&size=20
+  url: {{base_url}}/api/checklists
   body: none
   auth: inherit
 }
 
+headers {
+  Accept: application/json
+}
+
 params:query {
-  page: 0
-  size: 20
+  page: {{checklists_page}}
+  size: {{checklists_page_size}}
+  sort: {{checklists_sort}}
+}
+
+vars:pre-request {
+  checklists_page: 0
+  checklists_page_size: 20
+  checklists_sort: id,asc
 }
 
 settings {

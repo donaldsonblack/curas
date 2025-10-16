@@ -1,0 +1,52 @@
+meta {
+  name: Replace (Put)
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{base_url}}/api/checklists/{{checklist_id}}
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "name": "{{checklist_replace_name}}",
+    "description": "{{checklist_replace_description}}",
+    "type": "{{checklist_replace_type}}",
+    "deptId": {{checklist_replace_dept_id}},
+    "equipId": {{checklist_replace_equip_id}},
+    "authId": {{checklist_replace_auth_id}},
+    "questions": [
+      {
+        "prompt": "{{checklist_replace_question_prompt}}",
+        "type": "{{checklist_replace_question_type}}",
+        "required": {{checklist_replace_question_required}}
+      }
+    ]
+  }
+}
+
+vars:pre-request {
+  checklist_id: 1
+  checklist_replace_name: Updated Safety Audit Checklist
+  checklist_replace_description: Replace existing checklist with updated details
+  checklist_replace_type: routine
+  checklist_replace_dept_id: 1
+  checklist_replace_equip_id: 1
+  checklist_replace_auth_id: 1
+  checklist_replace_question_prompt: Are safety guards reinstalled?
+  checklist_replace_question_type: boolean
+  checklist_replace_question_required: true
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

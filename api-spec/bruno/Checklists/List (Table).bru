@@ -1,0 +1,32 @@
+meta {
+  name: List (Table)
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/api/checklists/table
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+params:query {
+  page: {{checklists_table_page}}
+  size: {{checklists_table_size}}
+  sort: {{checklists_table_sort}}
+}
+
+vars:pre-request {
+  checklists_table_page: 0
+  checklists_table_size: 20
+  checklists_table_sort: name,asc
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
