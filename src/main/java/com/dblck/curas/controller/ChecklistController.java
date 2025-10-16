@@ -33,7 +33,7 @@ public class ChecklistController {
 
   @Operation(
       summary = "Retrieve all checklists",
-      description = "Returns a paginated list of all checklists.",
+      description = "Returns a paginated list of all checklists",
       tags = {"Checklist"})
   @GetMapping
   public ResponseEntity<Page<Checklist>> getAll(Pageable pageable) {
