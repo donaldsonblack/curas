@@ -10,7 +10,14 @@ on:
   push:
     branches:
       - main
-
+    paths:
+      - "**/*.java"
+      - "**/*.kt"
+      - "build.gradle"
+      - "build.gradle.kts"
+      - "gradle/**"
+      - "settings.gradle*"
+  workflow_dispatch:
 
 permissions:
   contents: write # needed to commit the bumped version
