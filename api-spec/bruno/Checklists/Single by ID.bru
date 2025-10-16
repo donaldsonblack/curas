@@ -1,0 +1,16 @@
+meta {
+  name: Single by ID
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/api/checklists/405
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
