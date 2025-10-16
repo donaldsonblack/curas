@@ -66,7 +66,7 @@ public class ChecklistController {
       description = "Fetches a single checklist by its unique identifier.",
       tags = {"Checklist"})
   @GetMapping("/{id}")
-  public ResponseEntity<Checklist> getById(Integer id) {
+  public ResponseEntity<Checklist> getById(@PathVariable Integer id) {
     return service.getById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
