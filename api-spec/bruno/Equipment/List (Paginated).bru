@@ -10,6 +10,23 @@ get {
   auth: inherit
 }
 
+headers {
+  Accept: application/json
+}
+
+params:query {
+  page: {{equipment_page}}
+  size: {{equipment_page_size}}
+  sort: {{equipment_sort}}
+}
+
+vars:pre-request {
+  equipment_page: 0
+  equipment_page_size: 20
+  equipment_sort: id,asc
+}
+
 settings {
   encodeUrl: true
+  timeout: 0
 }

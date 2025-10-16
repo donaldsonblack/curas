@@ -1,0 +1,38 @@
+meta {
+  name: Replace (Put)
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{base_url}}/api/equipment/{{equipment_id}}
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "deptId": {{equipment_replace_dept_id}},
+    "serial": "{{equipment_replace_serial}}",
+    "model": "{{equipment_replace_model}}",
+    "name": "{{equipment_replace_name}}"
+  }
+}
+
+vars:pre-request {
+  equipment_id: 1
+  equipment_replace_dept_id: 1
+  equipment_replace_serial: EQ-001
+  equipment_replace_model: Model X200
+  equipment_replace_name: Generator Updated
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
