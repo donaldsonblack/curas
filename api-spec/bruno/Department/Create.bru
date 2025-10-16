@@ -1,0 +1,35 @@
+meta {
+  name: Create
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{base_url}}/api/department
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "name": "{{department_name}}",
+    "parent": {{department_parent_id}},
+    "location": "{{department_location}}"
+  }
+}
+
+vars:pre-request {
+  department_name: Engineering
+  department_parent_id: 0
+  department_location: HQ - Building A
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

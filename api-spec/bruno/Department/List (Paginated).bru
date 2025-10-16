@@ -1,0 +1,32 @@
+meta {
+  name: List (Paginated)
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/api/department
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+params:query {
+  page: {{department_page}}
+  size: {{department_page_size}}
+  sort: {{department_sort}}
+}
+
+vars:pre-request {
+  department_page: 0
+  department_page_size: 20
+  department_sort: id,asc
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

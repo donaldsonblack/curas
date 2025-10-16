@@ -1,0 +1,36 @@
+meta {
+  name: Replace (Put)
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{base_url}}/api/department/{{department_id}}
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "name": "{{department_replace_name}}",
+    "parent": {{department_replace_parent_id}},
+    "location": "{{department_replace_location}}"
+  }
+}
+
+vars:pre-request {
+  department_id: 1
+  department_replace_name: Engineering
+  department_replace_parent_id: 0
+  department_replace_location: HQ - Building A
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
