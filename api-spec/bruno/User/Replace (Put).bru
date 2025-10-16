@@ -1,0 +1,38 @@
+meta {
+  name: Replace (Put)
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{base_url}}/api/user/{{user_id}}
+  body: raw
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Accept: application/json
+}
+
+body:raw {
+  {
+    "fname": "{{user_replace_first_name}}",
+    "lname": "{{user_replace_last_name}}",
+    "email": "{{user_replace_email}}",
+    "sub": "{{user_replace_sub}}"
+  }
+}
+
+vars:pre-request {
+  user_id: 1
+  user_replace_first_name: Ada
+  user_replace_last_name: Lovelace
+  user_replace_email: ada.lovelace@example.com
+  user_replace_sub: 123e4567-e89b-12d3-a456-426614174000
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
